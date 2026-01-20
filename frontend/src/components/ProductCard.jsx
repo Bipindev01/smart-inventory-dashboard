@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function ProductCard({ product, onUpdateStock, isUpdating }) {
   const isLowStock = product.stockQuantity < product.lowStockThreshold;
@@ -15,20 +15,30 @@ function ProductCard({ product, onUpdateStock, isUpdating }) {
   };
 
   return (
-    <div className={`product-card ${isLowStock ? 'low-stock' : ''}`}>
-      {isLowStock && (
+    <div
+      className={`product-card ${
+        isOutOfStock ? "out-stock" : isLowStock ? "low-stock" : ""
+      }`}
+    >
+      {(isLowStock || isOutOfStock) && (
         <div className="stock-badge">
-          {isOutOfStock ? '🚨 OUT OF STOCK' : '⚠️ CRITICAL LOW'}
+          {isOutOfStock ? "🚨 OUT OF STOCK" : "⚠️ CRITICAL LOW"}
         </div>
       )}
 
       {/* Product Image */}
       <div className="product-image-container">
-        <img 
-          src={product.image} 
-          alt={product.title}
-          className="product-image"
-        />
+        <img
+  src={product.image}
+  alt={product.title}
+  className="product-image"
+  loading="lazy"
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = "https://via.placeholder.com/400x300.png?text=No+Image";
+  }}
+/>
+
       </div>
 
       <div className="product-content">
@@ -36,7 +46,7 @@ function ProductCard({ product, onUpdateStock, isUpdating }) {
           <div className="category-badge">{product.category}</div>
           <h3 className="product-name">{product.title}</h3>
           <p className="product-price">${product.price.toFixed(2)}</p>
-          
+
           {/* Rating */}
           {product.rating && (
             <div className="product-rating">
@@ -49,14 +59,14 @@ function ProductCard({ product, onUpdateStock, isUpdating }) {
         <div className="stock-info">
           <div className="stock-row">
             <span className="stock-label">Current Stock:</span>
-            <span className={`stock-value ${isLowStock ? 'critical' : ''}`}>
+            <span className={`stock-value ${isLowStock ? "critical" : ""}`}>
               {product.stockQuantity}
             </span>
           </div>
 
           <div className="progress-bar">
             <div
-              className={`progress-fill ${isLowStock ? 'low' : ''}`}
+              className={`progress-fill ${isLowStock ? "low" : ""}`}
               style={{
                 width: `${Math.min(
                   (product.stockQuantity / product.lowStockThreshold) * 100,
